@@ -1,14 +1,20 @@
 -#  This file is app/views/movies/index.html.haml
 %h2 All Movies
-
+= form_tag movies_path, :method => :get, :id => "ratings_form" do
+  Include:
+  - @available_ratings.each do |rating|
+    = rating
+    = check_box_tag "ratings[#{rating}]", 1, (@ratings_selected.include? rating), :id => "ratings_#{rating}"
+  = submit_tag 'Refresh', :id=> "ratings_submit"
+  
 %table#movies.table.table-striped.col-md-12
   %thead
     %tr
       // %th Movie Title
-      %th{:class => @css_class_title}= link_to 'Movie Title', :sort => 'title', :id=>"title_header"
+      %th{:class => @css_class_title}= link_to 'Movie Title', :sort => 'title', :id=>"title_header", :ratings=>@set_ratings
       %th Rating
       // %th Release Date
-      %th{:class => @css_class_release}= link_to "Release Date", :sort => "release_date", :id=>"release_date_header"
+      %th{:class => @css_class_release}= link_to "Release Date", :sort => "release_date", :id=>"release_date_header", :ratings=>@set_ratings
       %th More Info
   %tbody
     - @movies.each do |movie|

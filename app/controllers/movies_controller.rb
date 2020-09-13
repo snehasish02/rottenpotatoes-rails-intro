@@ -15,6 +15,23 @@ class MoviesController < ApplicationController
     @css_class_title = sort_column == "title" ? "hilite" : nil
     @css_class_release = sort_column == "release_date" ? "hilite" : nil
     @movies = Movie.order(sort_column)
+    if params[:ratings]
+      @movies = Movie.where(params[:ratings].present? ? {:rating => (params[:ratings].keys)} :{}).order(params[:sort])
+    end
+    @available_ratings = Movie.all_ratings
+    @ratings_selected = []
+    if !params[:ratings].nil?
+      params[:ratings].each_key do |key|
+        @ratings_selected << key
+      end
+    elsif
+      @ratings_selected = @available_ratings
+    end
+    @set_ratings = params[:ratings]
+    if !@set_ratings
+      @set_ratings = Hash.new
+    end
+
   end
 
   def new
